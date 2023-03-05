@@ -60,7 +60,7 @@ get_cohorts <- function(scen=0, sun.p=1e6, sun.d=100, sun.d.pr=0.01, sun.s.pr=0.
     # indexy prokletejch
     cursed <- sample(signs$person,sun.k.p*sun.signs)
     # umrou do 14 dni
-    df$deaths[cursed] <- sapply(df[cursed,2],kill.em,s.int=sun.k.int,s.d=sun.d)
+    df.drp$deaths[cursed] <- sapply(df.drp[cursed,2],kill.em,s.int=sun.k.int,s.d=sun.d)
   }
 
   ## dataframe pro statistiku
