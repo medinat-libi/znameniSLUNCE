@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          table-layout: fixed;
+        }
+        table:p {
+          color: #dddddd;
+          text-indent: 0px;
+          font-weight: bold;
+        }
+        td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 3px;
+          
+        }
+        tr{
+          color: #eeeeee;
+          background-color: #1b2b57;
+        }
+        </style>
+  <!-- Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <!-- Fetching from CDN of D3.js -->
+  <script type = "text/javascript"  src = "https://d3js.org/d3.v4.min.js"> </script>
+</head>
+<body>
+    <h2>Znamení slunce pro každého</h2>
+    <h3>Obsah</h3>
+    <p><a href="#rekapitulace">Rekapitulace předchozího děje</a></p>
+    <p><a href="#puvodni">Původní model</a></p>
+    <p><a href="#novy">Nový, zjednodušený model</a></p>
+    <p><a href="#nahodnost">Náhodnost modelu - poměr průměru a směrodatné odchylky</a></p>
+    <p><a href="#legenda">Legenda jednotlivých parametrů simulace</a></p>
+    <h3 id="rekapitulace">Rekapitulace předchozího děje</h3>
+    <p>Před lety napsali Tomáš Fürst a Robert Straka v jazyce R simulaci Znamení Slunce, aby nám všem ukázali, co dovedou podmíněné pravděpodobnosti a odložená deklarovaná účinnost. Zjednodušeně řečeno, pokud je znamení slunce považováno za platné až po 14 dnech, ale populace se znamením se bere hned,
+vychází pravděpodobnost úmrtí se znamením zdánlivě menší a znamení se jeví jako účinné.
+Živí se znamením se rekrutují později a tedy z podstatně větší populace než mrtví.
+Znamení slunce se tak jeví jako účinné proti smrti, i když reálně žádný vliv nemá
+nebo dokonce i když se do něj přimíchají nějaká znamení smrti a lidé se znamením umírají ve skutečnosti více.
+Pokud se k tomu přidá efekt, kdy si někteří pro svou předsmrtnou nemohoucnost
+nemohou pro znamení ani dojít, jeví se ochranný efekt znamení ještě výraznější bez ohledu na to jestli reálně existuje.
+Tehdy jsem si představoval, že se to za pár měsíců všechno vysvětlí,
+lidé i díky té simulaci pochopí, že se jim neříká pravda, a přestanou tolik blbnout.</p>
+<p>Nestalo se. Naopak se našli lidé, kteří se té simulaci beze špetky pochopení posmívali.</p>
+<p>A tak to vypadá, že různá znamení slunce tu s námi ještě nějakou dobu zůstanou.</p>
+
+<p>A protože ne každý pracuje s nástroji matematického modelování a může si spustit původní aplikaci v R studiu, napadlo mě původní model přizpůsobit pro webové stránky (webový prohlížeč má téměř každý) a dát ho k dispozici všem.</p>
+
+    <h3 id="puvodni">Původní model</h3>
+<p>Původní model Tomáše Fürsta a Roberta Straky dává celé populaci identifikační čísla. Pak spočítá podle zadání přesný, nenáhodný počet zemřelých, k němu pak vylosuje identifikační čísla a dny úmrtí.</p>
+
+<p>Pokud se navíc do znamení slunce přimíchá znamení smrti, losuje i zemřelé pro znamení smrti. Výpočet je to náročný na počítačovou paměť i výpočetní čas.</p>
+
+<h3 id="novy">Nový, zjednodušený model</h3>
+<p> Rozhodl jsem se model zjednodušit a počítat pouze s velikostí populací. Každý den se tak losují nikoliv jednotlivci, ale rovnou počty zemřelých. Riziko úmrtí se tak i pro velké populace počítá velmi rychle. U populace bez znamení slunce je věc jednoduchá, prostě se náhodně vylosuje, kolik je zemřelých při dané pravděpodobnosti úmrtí na den. U populace se znamením se sečte nebo složí pravděpodobnost úmrtí kvůli znamení s pravděpodobností úmrtí přirozenou. </p>
+
+<h3 id="nahodnost">Náhodnost modelu - poměr průměru a směrodatné odchylky</h3>
+<p>Ptáte se: Kolik lidí tak denně umírá? To se den ode dne liší! Ale existuje nějaká průměrná hodnota, kolik by to mělo být. Dejme tomu pokud za rok zemře jedno procento populace, za den je to pro většinu roků kolem jedné třistapětašedesátiny procenta. To ale ještě neříká přesně kolik, protože někdy to bude víc a někdy míň, jen to kolem tohoto čísla bude pro velké populace nejčastěji. Nebudu vás napínat, použité rozdělení pravděpodobností je podle onoho Gaussova klobouku nebo pověstného hroznýše, co podle Malého Prince snědl slona, čemuž se říká normální sešikmené rozdělení (normal skew distribution).</p>
+
+<img src="./image4.jpg">
+<br>
+<img src="./image1.jpg">
+<p>Protože je jedna třistapětašedesátina procenta blízká nule, bude slon (očekávaný poměr úmrtí na den) blízko nule. Teoreticky je ovšem možné s mizivou pravděpodobností, že v jeden den zemřou třeba všichni.</p>
+
+<p>Otázkou ovšem je, jak moc má být ten slon dlouhý. V medicíně se pro to běžně užívá poměr průměru a směrodatné odchylky. Čím je tento poměr větší, tím méně náhodné jsou i počty úmrtí.</p>
+<img src="./image2.jpg">
+
+<p>Vysoký poměr průměru a směrodatné odchylky znamená, že každý den zemře více méně stejně lidí. Slon bude krátký.</p>
+<img src="./image3.jpg">
+<p>Samozřejmě pokud by mělo zemřít 360 lidí za rok, znamená to nejspíš náhodně vybrat pět dní, kdy nikdo nezemře.</p>
+<img src="./image6.jpg">
+<p>Nemůže také zemřít záporný počet lidí.</p>
+<img src="./image7.jpg">
+<p>Pokud tedy vyjde záporné číslo, protože poměr průměru a sigma je malý, znamená to jen tolik, že ten den nezemřel nikdo.</p>
+<img src="./image5.jpg">
+<p>Pokud je poměr průměru a sigma malý, bude model více náhodný a jednotlivé dny se od sebe budou více lišit co do úmrtnosti a grafy budou více “střapaté”. Naopak velký poměr průměru a sigma znamená méně náhodný model a typicky vykreslí jen očekávané nebo dokonce jen průměrné hodnoty a graf bude spíše méně střapatý.</p>
+
+<p>Pokud je populace malá, je část střapatostí grafů úmrtnosti pravděpodobností prostě dána tím, že předpoklad úmrtí jednoho hodně ovlivní celkovou pravděpodobnost úmrtí pro daný den.</p>
+
+<h3 id="legenda">Legenda jednotlivých parametrů simulace</h3>
+<h4 id="#populace">Populace</h3>
+<p>Celková populace na začátku experimentu</p>
+
+<h4 id="#znameni">Znamení dostane</h4>
+<p>Jaká část dostane znamení. 0,65 například znamená, že znamení dostane šedesát pět lidí ze sta. Počet znamení slunce se počítá na začátku a pak se rovnoměrně postupně udělují každý den až do konce.</p>
+
+<h4 id="#prirozeny">Přirozený úbytek</h4>
+<p>Jaká část populace má přirozeně zemřít během celého období. 0,01 například znamená jeden ze sta. Tento parametr se rozdělí na jednotlivé dny a počítá se z toho očekávaná část, která zemře za jeden den a z ní se potom náhodně losuje s níže stanovenou odchylkou počet zemřelých pro daný den.</p>
+
+<h4 id="#slunecni">Sluneční přirozený úbytek - HVE</h4>
+Přirozený úbytek právě pro populaci, která plánuje přijmout znamení slunce je podle legendy typicky menší. Pokud tento efekt v simulaci nechcete, ponechte tuto hodnotu shodnou s přirozeným úbytkem, jinak se bude skutečný přirozený úbytek populace bez znamení slunce počítat jako vážený průměr Slunečního přirozeného úbytku a přirozeného úbytku. Pro populaci, která již přijala znamení slunce platí pouze Sluneční přirozený úbytek.
+
+<h4 id="#znamenizachranuje">Znamení zachraňuje</h4>
+    Tento parametr říká, jak velká část populace se znamením, která přirozeně zemřela, bude vzkříšena, a je tedy pro dan den přirozeně nesmrtelná. Může ji ale ještě zabít samotné znamení.
+<h4 id="#ubytek">Úbytek kvůli znamení</h4>
+    Jaká část populace má zemřít kvůli znamení? Jak se mají oba parametry skládat? Pokud předpokládáme, že jde o vzájemně se vylučující jevy, předpokládáme, že je to buď normální úbytek, nebo je to úbytek kvůli znamení, pak můžeme prostě oba sečíst přirozený úbytek a úbytek kvůli znamení. Pokud předpokládáme, že jevy nejsou vzájemně neslučitelné, nezbývá v daném kontextu než si vybrat, jestli je dřív jedno nebo druhé. Ukazuje to, jak těžkou úlohu má znamení, ideálně by totiž mělo najít toho, kdo má zemřít, a zachránit mu život. Podle takového předpokladu tedy nejdřív je třeba spočítat přirozený úbytek, a pak teprve, jak znamení zabíjelo v populaci se znamením nebo a jak zachraňovalo mezi těmi, kdo by přirozeně bez znamení ten den zemřeli. Model připouští i znamení, které zároveň zabíjí i zachraňuje. Pak tedy, pokud znamení zabíjí, zabíjí v celé populaci se znamením po celou dobu, a pokud zachraňuje, zachraňuje jen mezi těmi, kteří by jinak v daný den zemřeli. Ty, které znamení zabíjí, už nezachraňuje.
+
+<h4 id="#vzajemne"> Vzájemně neslučitelné jevy</h4>
+    Oba úbytky se sčítají, protože předpokládáme, že jde o jevy vzájemně neslučitelné. Každý jev má svoji populaci disjunktní s populací jevu druhého.
+
+<h4 id="#nejdriv">Nejdřív přirozený úbytek, pak znamení</h4>
+    Nejdříve vylosujeme, kolik je přirozený úbytek, z toho pak vylosujeme záchranu, ze zbývající populace vylosujeme, kolik je úbytek kvůli znamení.
+    <h4 id="#plne">Plné znamení od</h4>
+        Podle tohoto parametru se počítají ti se znamením až po nějakém počtu dní, velikost populace se znamením se ale počítá podle aktuálního dne. Tento účetní trik vytváří zdánlivý ochranný efekt znamení.
+
+        <h4 id="#mean-to-sigma">Mean-to-sigma ratio (průměr/sigma)</h4>
+        Určuje jak moc bude model náhodný. Vysoký poměr znamená malou náhodnost, nízký naopak náhodnost velkou. Viz výše: Náhodnost modelu.
+        <h4 id="#mean-to-sigma">μ</h4>
+            Řecké písmeno μ - mí tady značí miliontinu.
+        <h4 id="#podekovani">Speciální poděkování</h4> 
+        Speciální poděkování patří Tomáši Fürstovi a Robertu Strakovi za původní nápad, <a href="https://plotly.com/">https://plotly.com/</a> za nástroje na vytváření grafu a <a href="https://d3js.org/">https://d3js.org/</a> za nástroje na vytvážení n8hodných čísel.
+ <br>
+ <br><br>
+ <table align="center"><a id="right"></a>
+ <tr><th>Populace:</th>
+     <th> <input type="number" id="N" value="10000000000" min="1" max="100000000000" onchange="keepN()"> (Celá populace na začátku)</th></tr>
+     <tr><th>Znamení dostane:</th>
+        <th> <input type="number" id="signRate" min="0.00001" value="0.65" max="1" step="0.00001" onchange="keepSignRate()"> z celé populace.</th></tr>
+ <tr><th>Přirozený úbytek:</th>
+     <th> <input type="number" id="naturalDeathRate" min="0.00001" value="0.01" max="0.1" step="0.00001" onchange="keepnaturalDeathRate()"> populace bez znamení.</th></tr>
+<tr><th>Sluneční přirozený úbytek (HVE):</th>
+        <th> <input type="number" id="HVEDeathRate" min="0.00001" value="0.01" max="0.1" step="0.00001" onchange="keepHVEDeathRate()"> populace plánující znamení.</th></tr>
+<tr><th>Znamení zachraňuje:</th>
+    <th> <input type="number" id="signLifeRate" min="-0.00001" value="0.001" max="0.1" step="0.00001" onchange="keepsignLifeRate()">
+           z populace lidí se znamením, kteří by jinak zemřeli.</th>
+   </tr>
+<tr><th>Úbytek kvůli znamení:</th>
+     <th> <input type="number" id="signDeathRate" min="-0.00001" value="0.001" max="0.1" step="0.00001" onchange="keepsignDeathRate()">
+        z populace lidí se znamením, kteří by jinak žili.</th>
+    </tr>
+   <tr><th><input type="radio" id="exclusive" name="s" value="exclusive" checked />
+    <label for="exclusive">Vzájemně neslučitelné jevy</label></th>
+    <th>
+        <input type="radio" id="conclusive" name="s" value="conclusive" checked />
+    <label for="conclusive">Přirozený úbytek, pak záchrana, pak znamení</label>
+    </th></tr>
+<tr><th>Délka období:</th>
+        <th> <input type="number" id="Days" min="10" value="100" max="10000" step="1" onchange="keepDays()"> dní od začátku do konce.</th></tr>
+<tr><th>Plné znamení od:</th>
+            <th> <input type="number" id="delay" min="0" value="14" step="1" onchange="keepDelay()"> dní od kdy se počítá plné znamení.</th></tr>
+<tr><th>Mean-to-sigma ratio (průměr/sigma):</th>
+    <th> <input type="number" id="mean-to-sigma" min="0" value="20" step="1" onchange="keepMeanSigma()"> (nestřapatost či nenáhodnost grafu)</th></tr>
+          <tr>
+    <th>
+        <button align="center" onclick="simulation()"> Spustit simulaci </button>
+    </th>
+    <th>
+    </th>
+</tr>
+</table>
+<!-- Plotly chart will be drawn inside this DIV -->
+<div id="graphDiv" ><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+</div>
+
+  <script>
+    function keepN(){ // keeps N between 1 and 10^11 for the time being
+            v = document.getElementById("N").value
+            if (v>1000000000000) document.getElementById("N").value = 100000000000
+            else if (v<1) document.getElementById("N").value = 1
+        }
+
+        function keepSignRate(){ 
+            v = document.getElementById("signRate").value
+            if (v>1) document.getElementById("signRate").value = 1
+            else if (v<0) document.getElementById("signRate").value = 0
+        }
+
+
+        function keepnaturalDeathRate(){ 
+            v = document.getElementById("naturalDeathRate").value
+            if (v>1) document.getElementById("naturalDeathRate").value = 1
+            else if (v<0) document.getElementById("naturalDeathRate").value = 0
+        }
+
+        function keepHVEDeathRate(){ 
+            v = document.getElementById("naturalDeathRate").value
+            if (v>1) document.getElementById("naturalDeathRate").value = 1
+            else if (v<0) document.getElementById("naturalDeathRate").value = 0
+        }
+
+        function keepsignDeathRate(){ 
+            v = document.getElementById("signDeathRate").value
+            if (v>1) document.getElementById("signDeathRate").value = 1
+            else if (v<-0.0001) document.getElementById("signDeathRate").value = -0.0001
+        }
+        function keepsignLifeRate(){ 
+            v = document.getElementById("signLifeRate").value
+            if (v>1) document.getElementById("signLifeRate").value = 1
+            else if (v<0) document.getElementById("signLifeRate").value = 0
+        }
+
+        function keepDays(){ // keeps N between 1 and 10^11 for the time being
+            v = document.getElementById("Days").value
+            if (v>10000) document.getElementById("Days").value = 10000
+            else if (v<10) document.getElementById("Days").value = 10
+        }
+
+        function keepDelay(){ // keeps N between 1 and 10^11 for the time being
+            v = document.getElementById("delay").value
+            if (v>10000) document.getElementById("delay").value = 10000
+            else if (v<0) document.getElementById("Days").value = 0
+        }
+
+        function keepMeanSigma(){
+            v = document.getElementById("mean-to-sigma").value
+            if (v<0) document.getElementById("Days").value = 0
+        }
+        function nonnegative(x){
+            if (x<0) return 0
+            else return x
+        }
+
+function simulation(){
+
+var data = [
+  {mode: 'lines', line: {color: "#b50000"}, y:[], name: 'Se znamením Slunce' }, 
+  {mode: 'lines', line: {color: "#000046"}, y:[], name: 'Bez znamení Slunce' }
+]
+            days              = document.getElementById("Days").value
+            signDeathRate     = Number(document.getElementById("signDeathRate").value)
+            signLifeRate      = Number(document.getElementById("signLifeRate").value)
+            naturalDeathRate  = Number(document.getElementById("naturalDeathRate").value)
+            HVE_death_rate    = Number(document.getElementById("HVEDeathRate").value)
+            N =                 document.getElementById("N").value
+            signRate =          document.getElementById("signRate").value
+            meanToSigma =       document.getElementById("mean-to-sigma").value
+            delay =             document.getElementById("delay").value
+            N_of_signs =        Math.round(signRate*N)
+            N_of_signs_to_give = N_of_signs
+            N_of_signed = 0    // actual number of signed kept here
+            N_of_non_signed = N
+            ratio_to_pixels=10000 //
+            reported_signed      = []
+            conclusive =        ("conclusive" == document.getElementById("conclusive").value)
+            // step 0 here to avoid if in the cycle
+              nonSignedDeathRate   = ((days-1)*HVE_death_rate + naturalDeathRate)/days
+              N_of_signs_used = 0
+              signs_per_day   = Math.round(N_of_signs/days - N_of_signs_used)
+              N_of_signed     = signs_per_day
+              N_of_signs_used = signs_per_day
+              N_of_non_signed = N - signs_per_day
+              N_of_expected_signed_naturally_died = N_of_signed * HVE_death_rate/days
+              reported_signed.push(N_of_signed)
+              N_of_signed_naturally_died = nonnegative(Math.round(d3.randomNormal(N_of_expected_signed_naturally_died,N_of_expected_signed_naturally_died/meanToSigma)()))
+              N_of_expected_saved = signLifeRate*N_of_signed_naturally_died
+              N_of_saved = nonnegative(Math.round(d3.randomNormal(N_of_expected_saved,N_of_expected_saved/meanToSigma)()))
+              if (N_of_saved>N_of_signed_naturally_died) N_of_saved = N_of_signed_naturally_died
+              N_of_signed_naturally_died = N_of_signed_naturally_died - N_of_saved
+              if (conclusive) N_of_expected_died_by_sign = (N_of_signed - N_of_signed_naturally_died) * signDeathRate/days
+                        // sign deaths come either after natural deaths (conclusive above)
+                        // or sign deaths and natural deaths are mutually exclusive (beneath)
+                        else    N_of_expected_died_by_sign =  N_of_signed                               * signDeathRate/days
+                N_of_signed_died_by_sign   = nonnegative(Math.round(d3.randomNormal(N_of_expected_died_by_sign,         N_of_expected_died_by_sign/meanToSigma)  ()))
+                N_of_signed_died = N_of_signed_naturally_died + N_of_signed_died_by_sign
+                if (N_of_signed_died>N_of_signed){
+                    N_of_signed_died = N_of_signed
+                    // so far we do not care if the user entered extreme randomness or nonsense values
+                    }
+                N_of_expected_non_signed_died = N_of_non_signed * nonSignedDeathRate/days
+                N_of_non_signed_died = nonnegative(Math.round(d3.randomNormal(N_of_expected_non_signed_died,N_of_expected_non_signed_died/meanToSigma)()))
+                if (N_of_non_signed_died > N_of_non_signed) N_of_non_signed_died = N_of_non_signed
+                if (0<delay) death_ratio_signed = 0 
+                else {
+                     death_ratio_signed = N_of_signed_died/N_of_signed * reported_signed[i-delay] / N_of_signed
+                     //death ratio is counted based on delayed population
+                     }
+                death_ratio_non_signed = N_of_non_signed_died/N_of_non_signed
+                data[0].y.push(death_ratio_signed)
+                data[1].y.push(death_ratio_non_signed)
+                N_of_non_signed = N_of_non_signed - N_of_non_signed_died - signs_per_day
+                N_of_signed = N_of_signed - N_of_signed_died // update N_of_signed for deaths
+            for(i = 1;i<days;i++){
+                // most ideal, most likely avarage scenario, that is still absolutely unlikely
+                // since all randomness is excluded there and that is unlikely
+                // TO DO: HVE
+                // first people get signed
+                signs_per_day = Math.round((i+1)*N_of_signs/days - N_of_signs_used)
+                N_of_signed = N_of_signed + signs_per_day
+                N_of_signs_used = N_of_signs_used+ signs_per_day // update N_of_signed for signs
+                N_of_expected_signed_naturally_died = N_of_signed * HVE_death_rate/days
+                reported_signed.push(N_of_signed)
+                // suposedly not mutually exclusive
+                N_of_signed_naturally_died = nonnegative(Math.round(d3.randomNormal(N_of_expected_signed_naturally_died,N_of_expected_signed_naturally_died/meanToSigma)()))
+                N_of_expected_saved = signLifeRate*N_of_signed_naturally_died
+                N_of_saved = nonnegative(Math.round(d3.randomNormal(N_of_expected_saved,N_of_expected_saved/meanToSigma)()))
+                if (N_of_saved>N_of_signed_naturally_died) N_of_saved = N_of_signed_naturally_died
+                N_of_signed_naturally_died = N_of_signed_naturally_died - N_of_saved
+                if (conclusive) N_of_expected_died_by_sign = (N_of_signed - N_of_signed_naturally_died) * signDeathRate/days
+                        else    N_of_expected_died_by_sign =  N_of_signed                               * signDeathRate/days
+                N_of_signed_died_by_sign   = nonnegative(Math.round(d3.randomNormal(N_of_expected_died_by_sign,         N_of_expected_died_by_sign/meanToSigma)  ()))
+                N_of_signed_died = N_of_signed_naturally_died + N_of_signed_died_by_sign
+                if (N_of_signed_died>N_of_signed){
+                    N_of_signed_died = N_of_signed
+                    // so far we do not care if the user entered extreme randomness or nonsense values
+                    }
+                nonSignedDeathRate   = ((days-i-1)*HVE_death_rate + (i+1)*naturalDeathRate)/days
+                N_of_expected_non_signed_died = N_of_non_signed * nonSignedDeathRate/days
+                N_of_non_signed_died = nonnegative(Math.round(d3.randomNormal(N_of_expected_non_signed_died,N_of_expected_non_signed_died/meanToSigma)()))
+                if (N_of_non_signed_died > N_of_non_signed) N_of_non_signed_died = N_of_non_signed
+                if (i<delay) death_ratio_signed = 0 
+                else {
+                     death_ratio_signed = N_of_signed_died/N_of_signed * reported_signed[i-delay] / N_of_signed
+                     //death ratio is counted based on delayed population
+                     }
+                death_ratio_non_signed = N_of_non_signed_died/N_of_non_signed
+                data[0].y.push(death_ratio_signed)
+                data[1].y.push(death_ratio_non_signed)
+                N_of_non_signed = N_of_non_signed - N_of_non_signed_died - signs_per_day
+                N_of_signed = N_of_signed - N_of_signed_died // update N_of_signed for deaths
+            }
+
+var layout = {
+  title: 'Znamení Slunce podle Vašeho designu',
+  uirevision:'true',
+  showlegend: true,
+  legend: {"orientation": "h"},
+  xaxis: {
+    title: 'Dny',
+    autorange: true
+    },
+  yaxis: {
+    title: 'Riziko úmrtí',
+    autorange: true
+    }
+};
+
+Plotly.react(graphDiv, data, layout);
+
+//var myPlot = document.getElementById('graphDiv');
+
+  // user interation will mutate layout and set autorange to false
+  // so we need to reset it to true
+  layout.xaxis.autorange = true;
+  layout.yaxis.autorange = true;
+  
+  // not changing uirevision will ensure that user interactions are unchanged
+  // layout.uirevision = rand();
+  
+  Plotly.react(graphDiv, data, layout);
+}
+  </script>
+</body>
+</html>
